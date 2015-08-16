@@ -38,6 +38,15 @@ public class FileWork {
         return dirContent.toString();
     }
 
+    private void writeFile(String pathName, String text) throws FileWriteException {
+        File file = new File(pathName);
+        try (PrintWriter out = new PrintWriter(file.getAbsoluteFile())) {
+            out.print(text);
+        } catch (IOException e) {
+            throw new FileWriteException(pathName + " write error");
+        }
+    }
+
     public String view(String pathName) throws FileReadException {
         File path = new File(pathName);
         String result = "";
@@ -66,15 +75,6 @@ public class FileWork {
         textBuffer.append(getFile(file.getAbsoluteFile())).append(newText);
         writeFile(pathName, textBuffer.toString());
         return pathName + " written";
-    }
-
-    private void writeFile(String pathName, String text) throws FileWriteException {
-        File file = new File(pathName);
-        try (PrintWriter out = new PrintWriter(file.getAbsoluteFile())) {
-            out.print(text);
-        } catch (IOException e) {
-            throw new FileWriteException(pathName + " write error");
-        }
     }
 
     public String removeFile(String pathName) {

@@ -1,6 +1,7 @@
 package kz.e16training.fileworks.controller;
 
 
+import kz.e16training.fileworks.exceptions.GetTextFromUserException;
 import kz.e16training.fileworks.io.IO;
 
 import java.io.IOException;
@@ -12,21 +13,6 @@ import java.io.IOException;
 public class Controller {
 
     public Controller() {
-    }
-
-    public void commandLine() {
-        String readCommand = "";
-        viewHelp();
-        while(true) {
-            askForCommand();
-            try {
-                readCommand = getCommand();
-            } catch (IOException e) {
-                // do something! ;)
-            }
-            if (isReadCommandValid(readCommand)) output(doCommand(readCommand));
-            if (readCommand.equals(WorkCommand.EXIT.getCommandValue())) break;
-        }
     }
 
     private void askForCommand() {
@@ -41,7 +27,8 @@ public class Controller {
         String[] splitCommand = readCommand.split(" ");
         for (WorkCommand workCommand : WorkCommand.values()) {
             if (workCommand.getCommandValue().equals(splitCommand[0])) {
-                return workCommand.commandOutput(splitCommand.length > 1 ? splitCommand[1] : null);
+                return workCommand.commandOutput(splitCommand.length > 1
+                        ? splitCommand[1] : null);
             }
         }
         return WorkCommand.WRONG_COMMAND.commandOutput(null);
@@ -56,6 +43,27 @@ public class Controller {
     }
 
     public String getCommand() throws IOException {
-        return IO.getCommand();
+        try {
+            return IO.getCommand();
+        } catch (GetTextFromUserException e) {
+            return "wrong";
+        }
+    }
+
+    public void commandLine() {
+        String readCommand = "";
+        viewHelp();
+        while(true) {
+            askForCommand();
+            try {
+                readCommand = getCommand();
+            } catch (IOException e) {
+                // do something! ;)
+            }
+            if (isReadCommandValid(readCommand))
+                output(doCommand(readCommand));
+            if (readCommand.equals(WorkCommand.EXIT
+                    .getCommandValue())) break;
+        }
     }
 }

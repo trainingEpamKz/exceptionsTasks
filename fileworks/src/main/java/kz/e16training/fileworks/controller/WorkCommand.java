@@ -3,6 +3,7 @@ package kz.e16training.fileworks.controller;
 
 import kz.e16training.fileworks.exceptions.CreateFileException;
 import kz.e16training.fileworks.exceptions.FileReadException;
+import kz.e16training.fileworks.exceptions.GetTextFromUserException;
 import kz.e16training.fileworks.io.FileWork;
 import kz.e16training.fileworks.exceptions.FileWriteException;
 import kz.e16training.fileworks.io.IO;
@@ -14,14 +15,16 @@ import java.io.IOException;
  *
  */
 public enum WorkCommand implements IWCommand {
-    EXIT(1, "exit", "Exit from program", "have no parameters") {
+    EXIT(1, "exit", "Exit from program",
+            "have no parameters") {
         public String commandOutput(String option) {
             if (option != null) return EXIT.wrongParameter;
             else return EXIT.description;
         }
     },
 
-    VIEW(3, "view", "view directory or file" , "use view <dir or file name>") {
+    VIEW(3, "view", "view directory or file" ,
+            "use view <dir or file name>") {
         public String commandOutput(String option) {
             if (option == null) return VIEW.wrongParameter;
             else try {
@@ -37,7 +40,9 @@ public enum WorkCommand implements IWCommand {
             if (option == null) return WORK_FILE.wrongParameter;
             else try {
                 return fileWork.usingFile(option, IO.askAndGetText());
-            } catch (FileReadException | CreateFileException | FileWriteException | IOException e) {
+            } catch (FileReadException | CreateFileException |
+                    FileWriteException | GetTextFromUserException |
+                    IOException e) {
                 return e.getMessage();
             }
         }
@@ -57,9 +62,10 @@ public enum WorkCommand implements IWCommand {
         }
     },
 
-    WRONG_COMMAND(0, "wrong", "wrong command, type - \"help\", for help" , "have no parameters") {
+    WRONG_COMMAND(0, "wrong", "wrong command, " +
+            "type - \"help\", for help" , "have no parameters") {
         public String commandOutput(String option) {
-            if (option != null) return EXIT.wrongParameter;
+            if (option != null) return WRONG_COMMAND.wrongParameter;
             else return WRONG_COMMAND.description;
         }
     };
@@ -72,12 +78,19 @@ public enum WorkCommand implements IWCommand {
     private final int systemCommandStatus = 0;
     private final int fileCommandStatus = 2;
     private final int dirAndFileCommandStatus = 3;
-    WorkCommand(int commandStatus, String command, String description, String wrongParameter) {
+
+    WorkCommand(int commandStatus, String command,
+                String description, String wrongParameter) {
         this.command = command;
         this.description = description;
         this.commandStatus = commandStatus;
         this.wrongParameter = wrongParameter;
         fileWork = new FileWork();
+    }
+
+    private boolean isCommandStatus(WorkCommand workCommand,
+                                    int commandStatus) {
+        return workCommand.commandStatus == commandStatus;
     }
 
     protected String getAllCommands() {
@@ -87,7 +100,8 @@ public enum WorkCommand implements IWCommand {
                 result.append("\t").append(workCommand.command).append(" ");
                 if (isCommandStatus(workCommand, fileCommandStatus)) {
                     result.append(" <filename> ");
-                } else if (isCommandStatus(workCommand, dirAndFileCommandStatus)) {
+                } else if (isCommandStatus(workCommand,
+                        dirAndFileCommandStatus)) {
                     result.append(" <dir or file name> ");
                 }
                 result.append(" - ").append(workCommand.description)
@@ -95,10 +109,6 @@ public enum WorkCommand implements IWCommand {
             }
         }
         return result.toString();
-    }
-
-    private boolean isCommandStatus(WorkCommand workCommand, int commandStatus) {
-        return workCommand.commandStatus == commandStatus;
     }
 
     public String getCommandValue() {
