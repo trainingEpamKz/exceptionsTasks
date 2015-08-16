@@ -2,7 +2,7 @@ package kz.e16training.fileworks.controller;
 
 
 import kz.e16training.fileworks.exceptions.CloseInputStreamException;
-import kz.e16training.fileworks.exceptions.GetTextFromUserException;
+import kz.e16training.fileworks.exceptions.GetTextFromUserInputException;
 import kz.e16training.fileworks.io.IO;
 
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class Controller {
     public String getCommand() throws IOException {
         try {
             return IO.getCommand();
-        } catch (GetTextFromUserException e) {
+        } catch (GetTextFromUserInputException e) {
             return WorkCommand.WRONG_COMMAND.getCommandValue();
         }
     }

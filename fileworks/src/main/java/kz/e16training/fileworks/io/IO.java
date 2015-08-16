@@ -1,7 +1,7 @@
 package kz.e16training.fileworks.io;
 
 import kz.e16training.fileworks.exceptions.CloseInputStreamException;
-import kz.e16training.fileworks.exceptions.GetTextFromUserException;
+import kz.e16training.fileworks.exceptions.GetTextFromUserInputException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,11 +20,11 @@ public class IO {
         System.out.println(outputString);
     }
 
-    public static String getCommand() throws IOException, GetTextFromUserException {
+    public static String getCommand() throws IOException, GetTextFromUserInputException {
         return getLine();
     }
 
-    public static String askAndGetText() throws IOException, GetTextFromUserException {
+    public static String askAndGetText() throws IOException, GetTextFromUserInputException {
         print(ASK_FOR_TEXT);
         return getLine();
     }
@@ -33,11 +33,11 @@ public class IO {
         print(ASK_FOR_COMMAND);
     }
 
-    private static String getLine() throws GetTextFromUserException {
+    private static String getLine() throws GetTextFromUserInputException {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            throw new GetTextFromUserException("Read text from user input error");
+            throw new GetTextFromUserInputException("Read text from user input error");
         }
     }
 
