@@ -1,5 +1,6 @@
 package kz.e16training.fileworks.io;
 
+import kz.e16training.fileworks.exceptions.CloseInputStreamException;
 import kz.e16training.fileworks.exceptions.GetTextFromUserException;
 
 import java.io.BufferedReader;
@@ -13,6 +14,7 @@ import java.io.InputStreamReader;
 public class IO {
     private static final String ASK_FOR_COMMAND = "Input command:";
     private static final String ASK_FOR_TEXT = "Input text:";
+    private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public static void print(String outputString) {
         System.out.println(outputString);
@@ -32,10 +34,18 @@ public class IO {
     }
 
     private static String getLine() throws GetTextFromUserException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
+        try {
             return reader.readLine();
         } catch (IOException e) {
             throw new GetTextFromUserException("Read text from user input error");
+        }
+    }
+
+    public static void close() throws CloseInputStreamException {
+        try {
+            reader.close();
+        } catch (IOException e) {
+            throw new CloseInputStreamException("Error closing input stream");
         }
     }
 }

@@ -1,11 +1,8 @@
 package kz.e16training.fileworks.controller;
 
 
-import kz.e16training.fileworks.exceptions.CreateFileException;
-import kz.e16training.fileworks.exceptions.FileReadException;
-import kz.e16training.fileworks.exceptions.GetTextFromUserException;
+import kz.e16training.fileworks.exceptions.*;
 import kz.e16training.fileworks.io.FileWork;
-import kz.e16training.fileworks.exceptions.FileWriteException;
 import kz.e16training.fileworks.io.IO;
 
 import java.io.IOException;
@@ -40,8 +37,7 @@ public enum WorkCommand implements IWCommand {
             if (option == null) return WORK_FILE.wrongParameter;
             else try {
                 return fileWork.usingFile(option, IO.askAndGetText());
-            } catch (FileReadException | CreateFileException |
-                    FileWriteException | GetTextFromUserException |
+            } catch (ProjectMainException |
                     IOException e) {
                 return e.getMessage();
             }

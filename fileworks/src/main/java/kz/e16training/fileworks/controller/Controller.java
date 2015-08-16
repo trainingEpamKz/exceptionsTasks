@@ -1,6 +1,7 @@
 package kz.e16training.fileworks.controller;
 
 
+import kz.e16training.fileworks.exceptions.CloseInputStreamException;
 import kz.e16training.fileworks.exceptions.GetTextFromUserException;
 import kz.e16training.fileworks.io.IO;
 
@@ -46,7 +47,7 @@ public class Controller {
         try {
             return IO.getCommand();
         } catch (GetTextFromUserException e) {
-            return "wrong";
+            return WorkCommand.WRONG_COMMAND.getCommandValue();
         }
     }
 
@@ -64,6 +65,11 @@ public class Controller {
                 output(doCommand(readCommand));
             if (readCommand.equals(WorkCommand.EXIT
                     .getCommandValue())) break;
+        }
+        try {
+            IO.close();
+        } catch (CloseInputStreamException e) {
+            System.out.println(e.getMessage());
         }
     }
 }
